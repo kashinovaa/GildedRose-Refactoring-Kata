@@ -1,17 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using GildedRoseKata.Contracts;
+using GildedRoseKata.Models;
+using System.Collections.Generic;
 
 namespace GildedRoseKata
 {
     public class GildedRose
     {
         IList<Item> Items;
-        public GildedRose(IList<Item> Items)
+
+        public GildedRose(IList<Item> items)
         {
-            this.Items = Items;
+            Items = items;
         }
 
         public void UpdateQuality()
         {
+            /*foreach (var item in Items)
+            {
+                if (item is IUpdatable updatableItem)
+                    updatableItem.UpdateQuality();
+            }*/
+
             for (var i = 0; i < Items.Count; i++)
             {
                 if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
