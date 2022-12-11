@@ -15,7 +15,21 @@ namespace GildedRoseKata.Models
 
         public void UpdateQuality()
         {
-            
+            if (Quality > 0)
+                DecreaseQuality();
+                
+            SellIn--;
+
+            if ((SellIn < 0) && (Quality > 0))
+                DecreaseQuality();
+        }
+
+        private void DecreaseQuality()
+        {
+            if (Quality > 1)
+                Quality -= 2;
+            else
+                Quality--;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace GildedRoseKataTests
         [TestCase(-1, 100, 98)]
         public void TestUpdateQuality_WhenAgingItem_ThenShouldUpdateQualityCorrectly(int sellIn, int quality, int expectedQuality)
         {
-            _items.Add( new Item { SellIn = sellIn, Quality = quality } );
+            _items.Add( new AgingItem { SellIn = sellIn, Quality = quality } );
             _gildedRose = new GildedRose(_items);
             
             _gildedRose.UpdateQuality();
@@ -43,7 +43,7 @@ namespace GildedRoseKataTests
         public void TestUpdateQuality_WhenGrowingItem_ThenShouldUpdateQualityCorrectly(int sellIn, int quality, int expectedQuality)
         {
             var name = "Aged Brie";
-            _items.Add(new Item { Name = name, SellIn = sellIn, Quality = quality });
+            _items.Add(new GrowingItem { Name = name, SellIn = sellIn, Quality = quality });
             _gildedRose = new GildedRose(_items);
 
             _gildedRose.UpdateQuality();
@@ -57,7 +57,7 @@ namespace GildedRoseKataTests
         public void TestUpdateQuality_WhenLegendaryItem_ThenShouldUpdateNothing(int sellIn, int quality)
         {
             var name = "Sulfuras, Hand of Ragnaros";
-            _items.Add(new Item { Name = name, SellIn = sellIn, Quality = quality });
+            _items.Add(new LegendaryItem { Name = name, SellIn = sellIn, Quality = quality });
             _gildedRose = new GildedRose(_items);
 
             _gildedRose.UpdateQuality();
@@ -75,12 +75,44 @@ namespace GildedRoseKataTests
         public void TestUpdateQuality_WhenUniqueItem_ThenShouldUpdateQualityCorrectly(int sellIn, int quality, int expectedQuality)
         {
             var name = "Backstage passes to a TAFKAL80ETC concert";
-            _items.Add(new Item { Name = name, SellIn = sellIn, Quality = quality });
+            _items.Add(new UniqueItem { Name = name, SellIn = sellIn, Quality = quality });
             _gildedRose = new GildedRose(_items);
 
             _gildedRose.UpdateQuality();
 
             _items[0].Should().BeEquivalentTo(new Item { Name = name, SellIn = sellIn - 1, Quality = expectedQuality });
         }
+
+        [TestCase(0, 0, 0)]
+        [TestCase(0, 1, 0)]
+        [TestCase(0, 50, 46)]
+        [TestCase(0, 100, 96)]
+        [TestCase(1, 100, 98)]
+        [TestCase(-1, 100, 96)]
+        public void TestUpdateQuality_WhenConjuredItem_ThenShouldUpdateQualityCorrectly(int sellIn, int quality, int expectedQuality)
+        {
+            var name = "Conjured Mana Cake";
+            _items.Add(new ConjuredItem { Name = name, SellIn = sellIn, Quality = quality });
+            _gildedRose = new GildedRose(_items);
+
+            _gildedRose.UpdateQuality();
+
+            _items[0].Should().BeEquivalentTo(new Item { Name = name, SellIn = sellIn - 1, Quality = expectedQuality });
+        }
+
+        [TestCase(5, 100, 95)]
+        [TestCase(-5, 0, -4)]
+        public void TestUpdateQuality_WhenConjuredItem_ThenShouldReturnInvalidItem(int sellIn, int quality, int expectedQuality)
+        {
+            var name = "Conjured Mana Cake";
+            _items.Add(new ConjuredItem { Name = name, SellIn = sellIn, Quality = quality });
+            _gildedRose = new GildedRose(_items);
+
+            _gildedRose.UpdateQuality();
+
+            _items[0].Should().NotBeEquivalentTo(new Item { Name = name, SellIn = sellIn - 1, Quality = expectedQuality });
+        }
+
+        //todo: add more failing tests
     }
 }
